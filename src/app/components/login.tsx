@@ -21,7 +21,7 @@ const schema = z.object({
 // ログインページ
 const Login = () => {
     const router = useRouter();
-    const spabase = createClientComponentClient<Database>()
+    const supabase = createClientComponentClient<Database>()
     const [loading, setLoading] = useState(false)
     const [message, setMessage] = useState('')
 
@@ -37,6 +37,29 @@ const Login = () => {
     })
 
     const onSubmit: SubmitHandler<Schema> = async (data) => {
+        setLoading(true)
+
+        try {
+            // ログイン
+            const { error } = await supabase.auth.signInWithPassword({
+                email: data.email,
+                password: data.password,
+            })
+            // エラーチェック
+            if(error) {
+                setMessage('エラーが発生しました。'+ error.message)
+                return
+            }
+            // トップページに遷移
+            router.push('/')
+            
+        } catch (error) {
+            setMessage('エラーが発生しました。' + error)
+            return
+        } finally {
+            setLoading(false)
+            router.refresh()
+        }
 
     }
 
@@ -78,8 +101,8 @@ const Login = () => {
                         <Loading />
                     ) : (
                         <button
-                        type='submit'
-                        className='font-bold bg-sky-500 hover:brightness-95 w-full p-2 text-white text-sm'>
+                            type='submit'
+                            className='font-bold bg-sky-500 hover:brightness-95 w-full p-2 text-white text-sm'>
                             ログイン
                         </button>
                     )}
