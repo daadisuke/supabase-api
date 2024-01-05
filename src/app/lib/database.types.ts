@@ -38,7 +38,7 @@ export interface Database {
         Row: {
           avatar_url: string | null
           email: string
-          id: number
+          id: string
           introduce: string | null
           name: string | null
         }
