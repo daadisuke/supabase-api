@@ -130,6 +130,8 @@ const Profile = () => {
                         return
                     }
 
+                    setMessage('プロフィールを更新しました。')
+
             } catch (error) {
                 setMessage('エラーが発生しました。' + error)
                 return
@@ -204,8 +206,6 @@ const Profile = () => {
         )
 
     }, [])
-}
-
 }
 
 export default Profile
