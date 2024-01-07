@@ -81,7 +81,7 @@ const Profile = () => {
         setAvatar(files[0])
 
         // 送信
-        const onASubmit: SubmitHandler<Schema> = async (data) => {
+        const onSubmit: SubmitHandler<Schema> = async (data) => {
             setLoading(true)
             setMessage('')
 
