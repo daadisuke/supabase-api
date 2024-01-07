@@ -30,29 +30,31 @@ const Navigation = ({ session, profile }: {
         <div>
             <header className="shadow-lg shadow-gray-100">
                 <div className="py-5 container max-w-screen-sm mx-auto flex items-center justify-between">
-                    FullStackChannel
-                </div>
+                    <p>FullStackChannel</p>
 
-                <div className="text-sm font-bold">
-                    {session ? (
-                        <div className="flex items-center space-x-5">
-                            <Link href="/settings/profile">
-                                <div className="relative w-10 h-10">
-                                    <Image
-                                        src={profile && profile.avatar_url ? profile.avatar_url : '/default.png'}
-                                        className="rounded-full object-cover"
-                                        alt="avatar"
-                                        fill
-                                    />
-                                </div>
-                            </Link>
-                        </div>
-                    ) : (
-                        <div className="flex items-center space-x-5">
-                            <Link href="/auth/login">ログイン</Link>
-                            <Link href="/auth/signup">サインアップ</Link>
-                        </div>
-                    )}
+
+                    <div className="text-sm font-bold">
+                        {session ? (
+                            <div className="flex items-center space-x-5">
+                                <Link href="/settings/profile">
+                                    <div className="relative w-10 h-10">
+                                        <Image
+                                            src={profile && profile.avatar_url ? profile.avatar_url : '/default.png'}
+                                            className="rounded-full object-cover"
+                                            alt="avatar"
+                                            fill
+                                        />
+                                    </div>
+                                </Link>
+                            </div>
+                        ) : (
+                            <div className="flex items-center space-x-5">
+                                <Link href="/auth/login">ログイン</Link>
+                                <Link href="/auth/signup">サインアップ</Link>
+                            </div>
+                        )}
+                    </div>
+
                 </div>
 
             </header>
