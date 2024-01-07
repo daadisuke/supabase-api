@@ -1,4 +1,4 @@
-'useClient'
+'use client'
 
 import { useCallback, useState, useEffect } from 'react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
@@ -80,132 +80,132 @@ const Profile = () => {
         // 画像をセット
         setAvatar(files[0])
 
-        // 送信
-        const onSubmit: SubmitHandler<Schema> = async (data) => {
-            setLoading(true)
-            setMessage('')
+    }, [])
 
-            try {
-                let avatar_url = user.avatar_url
-                if (avatar) {
-                    // supabaseストレージに画像アップロード
-                    const { data: storageData, error: storageError } = await supabase.storage
-                        .from('profile')
-                        .upload(`${user.id}/${uuidv4()}`, avatar)
+    // 送信
+    const onSubmit: SubmitHandler<Schema> = async (data) => {
+        setLoading(true)
+        setMessage('')
 
-                    // エラーチェック
-                    if (storageError) {
-                        setMessage('エラーが発生しました。' + storageError.message)
-                        return
-                    }
+        try {
+            let avatar_url = user.avatar_url
+            if (avatar) {
+                // supabaseストレージに画像アップロード
+                const { data: storageData, error: storageError } = await supabase.storage
+                    .from('profile')
+                    .upload(`${user.id}/${uuidv4()}`, avatar)
 
-                    if (avatar_url) {
-                        const fileName = avatar_url.split('/').slice(-1)[0]
-
-                        // 古い画像を削除
-                        await supabase.storage.from('profile').remove([`${user.id}/${fileName}`])
-                    }
-
-                    // 画像のURLを取得
-                    const { data: urlData } = await supabase.storage
-                        .from('profile')
-                        .getPublicUrl(storageData.path)
-
-                    avatar_url = urlData.publicUrl
+                // エラーチェック
+                if (storageError) {
+                    setMessage('エラーが発生しました。' + storageError.message)
+                    return
                 }
 
-                // プロフィールアップデート
-                const { error: updateError } = await supabase
-                    .from('profiles')
-                    .update({
-                        name: data.name,
-                        introduce: data.introduce,
-                        avatar_url,
-                    })
-                    .eq('id', user.id)
+                if (avatar_url) {
+                    const fileName = avatar_url.split('/').slice(-1)[0]
 
-                    // エラーチェック
-                    if(updateError){
-                        setMessage('エラーが発生しました。'+ updateError.message)
-                        return
-                    }
+                    // 古い画像を削除
+                    await supabase.storage.from('profile').remove([`${user.id}/${fileName}`])
+                }
 
-                    setMessage('プロフィールを更新しました。')
+                // 画像のURLを取得
+                const { data: urlData } = await supabase.storage
+                    .from('profile')
+                    .getPublicUrl(storageData.path)
 
-            } catch (error) {
-                setMessage('エラーが発生しました。' + error)
-                return
-            } finally {
-                setLoading(false)
-                router.refresh()
+                avatar_url = urlData.publicUrl
             }
 
+            // プロフィールアップデート
+            const { error: updateError } = await supabase
+                .from('profiles')
+                .update({
+                    name: data.name,
+                    introduce: data.introduce,
+                    avatar_url,
+                })
+                .eq('id', user.id)
+
+            // エラーチェック
+            if (updateError) {
+                setMessage('エラーが発生しました。' + updateError.message)
+                return
+            }
+
+            setMessage('プロフィールを更新しました。')
+
+        } catch (error) {
+            setMessage('エラーが発生しました。' + error)
+            return
+        } finally {
+            setLoading(false)
+            router.refresh()
         }
 
-        return (
-            <div>
-                <div className='text-center font-bold text-xl mb-10'>プロフィール</div>
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    {/* アバター画像 */}
-                    <div className='mb-5'>
-                        <div className='flex flex-col text-sm items-center justify-center mb-5'>
-                            <div className="relative w-24 h-24 mb-5">
-                                <Image src={avatarUrl} className='rounded-full object-cover' alt="avatar" fill />
-                            </div>
-                            <input type="file" id="avatar" onChange={onUploadImage} />
-                            {fileMessage && <div className='text-center text-red-500 my-5'>{fileMessage}</div>}
+    }
+
+    return (
+        <div>
+            <div className='text-center font-bold text-xl mb-10'>プロフィール</div>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                {/* アバター画像 */}
+                <div className='mb-5'>
+                    <div className='flex flex-col text-sm items-center justify-center mb-5'>
+                        <div className="relative w-24 h-24 mb-5">
+                            <Image src={avatarUrl} className='rounded-full object-cover' alt="avatar" fill />
                         </div>
+                        <input type="file" id="avatar" onChange={onUploadImage} />
+                        {fileMessage && <div className='text-center text-red-500 my-5'>{fileMessage}</div>}
                     </div>
-                    {/* 名前 */}
-                    <div className='mb-5'>
-                        <div className='text-sm mb-1 font-bold'>名前</div>
-                        <input
-                            type="text"
-                            className='border rounded-md w-full py-2 px-3focus:outline-none'
-                            placeholder='名前'
-                            id='name'
-                            {...register('name', { required: true })}
-                            required
-                        />
-                        <div className='my-3 text-center text-sm text-red-500'>
-                            {errors.name?.message}
-                        </div>
+                </div>
+                {/* 名前 */}
+                <div className='mb-5'>
+                    <div className='text-sm mb-1 font-bold'>名前</div>
+                    <input
+                        type="text"
+                        className='border rounded-md w-full py-2 px-3focus:outline-none'
+                        placeholder='名前'
+                        id='name'
+                        {...register('name', { required: true })}
+                        required
+                    />
+                    <div className='my-3 text-center text-sm text-red-500'>
+                        {errors.name?.message}
                     </div>
+                </div>
 
-                    {/* 自己紹介 */}
-                    <div className='mb-5'>
-                        <div className='text-sm mb-1 font-bold'>自己紹介</div>
-                        <textarea
-                            className='border rounded-md w-full py-2 px-3 focus:outline-none'
-                            placeholder='自己紹介'
-                            id='introduce'
-                            {...register('introduce')}
-                            rows={5}
-                        />
-                    </div>
+                {/* 自己紹介 */}
+                <div className='mb-5'>
+                    <div className='text-sm mb-1 font-bold'>自己紹介</div>
+                    <textarea
+                        className='border rounded-md w-full py-2 px-3 focus:outline-none'
+                        placeholder='自己紹介'
+                        id='introduce'
+                        {...register('introduce')}
+                        rows={5}
+                    />
+                </div>
 
-                    {/* 変更ボタン */}
-                    <div className='mb-5'>
-                        {loading ? (
-                            <Loading />
-                        ) : (
-                            <button
-                                type='submit'
-                                className='font-bold bg-sky-500 hover:brightness-95 w-full rounded-full p-2 text-white text-sm'>
-                                変更
-                            </button>
-                        )}
-                    </div>
+                {/* 変更ボタン */}
+                <div className='mb-5'>
+                    {loading ? (
+                        <Loading />
+                    ) : (
+                        <button
+                            type='submit'
+                            className='font-bold bg-sky-500 hover:brightness-95 w-full rounded-full p-2 text-white text-sm'>
+                            変更
+                        </button>
+                    )}
+                </div>
 
-                </form >
+            </form >
 
-                {/* メッセージ */}
-                {message && <div className='my-5 text-center text-red-500 mb-5'>{message}</div>}
+            {/* メッセージ */}
+            {message && <div className='my-5 text-center text-red-500 mb-5'>{message}</div>}
 
-            </div >
-        )
-
-    }, [])
+        </div >
+    )
 }
 
 export default Profile
