@@ -1,11 +1,11 @@
 import { cookies } from 'next/headers'
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { redirect } from 'next/navigation'
-import Password from '@/app/components/password'
+import Logout from '@/app/components/logout'
 import type { Database } from '@/app/lib/database.types'
 
-// パスワード変更ページ
-const PasswordPage = async () => {
+// ログアウトページ
+const LogoutPage = async () => {
     const supabase = createServerComponentClient<Database>({
         cookies,
     })
@@ -19,7 +19,7 @@ const PasswordPage = async () => {
     if(!session) {
         redirect('/auth/login')
     }
-    return <Password />
+    return <Logout />
 }
 
-export default PasswordPage
+export default LogoutPage
